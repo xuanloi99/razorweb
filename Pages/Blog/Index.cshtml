@@ -1,0 +1,62 @@
+﻿@page
+@model WebApplication1.Pages.Blog.IndexModel
+@using WebApplication1.Helpers;
+@{
+    ViewData["Title"] = "Danh sách bài viết";
+    var i = 0;
+}
+@{ 
+    var paging = new Paging()
+    {
+        currentPage = Model.CurrentPage,
+        countPages = Model.CountPages,
+        generateUrl = (int? p) => Url.Page("/Blog/Index", new {p = p})
+    };
+
+}
+
+<h1>Danh Sách Bài Viết</h1>
+<form class="form-inline my-2 my-lg-0" method="GET" asp-page="./Index">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="searchString" value="">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+<p>
+    <a asp-page="Create" class="btn btn-primary">Tạo bài viết</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Created)
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        
+@foreach (var item in Model.Article) {
+        <tr>
+            <td>@(++i)</td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<partial name="_Paging" model="@paging" />
